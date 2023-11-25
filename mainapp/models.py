@@ -40,14 +40,10 @@ class Numero (models.Model):
         ('RE', 'Reservado'),
         ('DI', 'Disponible'),
     ]
-    GANADOR = [
-        ('SI', 'Si'),
-        ('NO', 'No'),
-    ]
     numero = models.PositiveIntegerField(null=False)
     id_rifa = models.ForeignKey(Rifa, on_delete= models.CASCADE, null=False)
     estado = models.CharField(max_length=2, choices=ESTADOS_CHOICES, default='DI', null=False)
-    ganador = models.CharField(max_length=2, choices=GANADOR, default='NO', null=False)
+    ganador = models.BooleanField()
 
     def __str__(self):
         return f'Numero {str(self.numero)} de la rifa {self.id_rifa.nombre}'
