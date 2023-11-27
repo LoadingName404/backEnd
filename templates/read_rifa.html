@@ -18,77 +18,75 @@
   </header>
   <main>
     <div class="container">
-    <div class="card mb-3" style="max-width: 540px;">
+      {% for r in rifa %}
+      <div class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
           <div class="col-md-4">
-            <img src="{{ rifa.imagen.url }}" class="img-fluid rounded-start" alt="imagen no encontrada">
+            <img src="{{ r.imagen.url }}" class="img-fluid rounded-start" alt="imagen no encontrada">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <h5 class="card-title">{{ r.nombre }}</h5>
+              <p class="card-text">{{ r.descripcion}}</p>
               <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
             </div>
           </div>
         </div>
       </div>
-    <h1>{{ rifa.nombre }}</h1>
-    <p>{{ rifa.descripcion }}</p>
+      {% endfor %}
     
-    <h2>Números Disponibles</h2>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Numero</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for n in numeros %}
-                  {% if n.estado == 'DI'%}
-                  <tr>
-                    <th scope="row">{{ n.numero }}</th>
-                    <td>Disponible</td>
-                    <td><a name="" id="" class="btn btn-primary" href="#" role="button">Comprar</a></td>
-                  </tr>
-                  {% endif %}
-                  {% if n.estado == 'RE'%}
-                  <tr>
-                    <th scope="row">{{ n.numero }}</th>
-                    <td>Reservado</td>
-                    <td></td>
-                  </tr>
-                  {% endif %}
-                  {% if n.estado == 'PA'%}
-                  <tr>
-                    <th scope="row">{{ n.numero }}</th>
-                    <td>Comprado</td>
-                    <td></td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-              </tbody>
-        </table>
+      <h2>Números Disponibles:</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Numero</th>
+            <th scope="col">Estado</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for n in numeros %}
+          {% if n.estado == 'DI'%}
+          <tr>
+            <th scope="row">{{ n.numero }}</th>
+            <td>Disponible</td>
+            <td><a name="" id="" class="btn btn-primary" href="#" role="button">Comprar</a></td>
+          </tr>
+          {% endif %}
+          {% if n.estado == 'RE'%}
+          <tr>
+            <th scope="row">{{ n.numero }}</th>
+            <td>Reservado</td>
+            <td></td>
+          </tr>
+          {% endif %}
+          {% if n.estado == 'PA'%}
+          <tr>
+            <th scope="row">{{ n.numero }}</th>
+            <td>Comprado</td>
+            <td></td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
     
-    <h2>Premios</h2>
-    <ul>
-        {% for premio in premios %}
-        <div class="card mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="{{ premios.id_premio.imagen.url }}" class="img-fluid rounded-start" alt="imagen no encontrada">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">{{ premios.id }}</h5>
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-              </div>
+      <h2>Premios:</h2>
+      {% for p in premios %}
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ p.id_premio.imagen.url }}" class="img-fluid rounded-start" alt="imagen no encontrada">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ p.id_premio.nombre }}</h5>
+              <p class="card-text">{{ p.id_premio.descripcion }}</p>
             </div>
           </div>
-        {% endfor %}
-      </ul>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </main>
   <footer>
