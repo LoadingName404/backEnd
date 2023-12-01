@@ -40,7 +40,7 @@
               <a class="nav-link" href="/admin">Administracion</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Rifas finalizadas</a>
+              <a class="nav-link" href="/rifas_terminadas/">Rifas finalizadas</a>
             </li>
           </ul>
         </div>
@@ -67,7 +67,13 @@
           <tr>
             <th scope="col">Numero</th>
             <th scope="col">Estado</th>
-            <th scope="col"><a name="" id="" class="btn btn-primary" href="/comprar_numero/{{ rifa.id }}" role="button">Comprar numeros</a></th>
+            <th scope="col">
+              {% if rifa.estado == 'DI' %}
+              <a name="" id="" class="btn btn-primary" href="/comprar_numero/{{ rifa.id }}" role="button">Comprar numeros</a>
+              {% elif rifa.estado == 'FI' %}
+              <button type="button" class="btn btn-primary" disabled>Comprar numeros</button>
+              {% endif %}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -75,21 +81,21 @@
           {% if n.estado == 'DI'%}
           <tr>
             <th scope="row">{{ n.numero }}</th>
-            <td>Disponible</td>
+            <td class="text-success">Disponible</td>
             <td></td>
           </tr>
           {% endif %}
           {% if n.estado == 'RE'%}
           <tr>
             <th scope="row">{{ n.numero }}</th>
-            <td>Reservado</td>
+            <td class="text-warning">Reservado</td>
             <td></td>
           </tr>
           {% endif %}
           {% if n.estado == 'PA'%}
           <tr>
             <th scope="row">{{ n.numero }}</th>
-            <td>Comprado</td>
+            <td class="text-danger">Comprado</td>
             <td></td>
           </tr>
           {% endif %}

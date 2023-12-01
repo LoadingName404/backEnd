@@ -1,9 +1,7 @@
 from django import forms
-from .models import Compra, Numero
+from .models import Compra
 
 class formCompra(forms.ModelForm):
-    numeros = forms.ModelMultipleChoiceField(queryset=Numero.objects.all())
-
     class Meta:
         model = Compra
         fields = '__all__'

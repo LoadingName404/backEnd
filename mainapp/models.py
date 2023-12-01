@@ -23,15 +23,12 @@ def validar_codigo(value):
     # Verificar la longitud del código
     if len(value) != 10:
         raise ValidationError('El código debe tener 10 caracteres.')
-
     # Verificar que los primeros 3 caracteres sean alfabéticos
     if not value[:3].isalpha():
         raise ValidationError('Los primeros 3 caracteres deben ser alfabéticos.')
-
     # Verificar que los últimos 7 caracteres sean numéricos
     if not value[3:].isdigit():
         raise ValidationError('Los últimos 7 caracteres deben ser numéricos.')
-
     # Verificar que haya más números pares que impares
     numeros = list(map(int, value[3:]))
     if sum(1 for num in numeros if num % 2 == 0) <= len(numeros) // 2:

@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from .models import Rifa, Compra, Numero, Premio
+from django.shortcuts import render, redirect
+from django.utils.timezone import now
+from .models import Rifa, Numero, Premio, validar_codigo
 from .forms import formCompra
 
 def index(request):
@@ -19,17 +20,28 @@ def read_rifa(request, rifa_id):
 def comprar_numero(request, rifa_id):
     rifa = Rifa.objects.get(id=rifa_id)
     numeros = Numero.objects.filter(id_rifa=rifa_id, estado='DI')
-    form = formCompra()
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = formCompra(request.POST)
         if form.is_valid():
-            compra = form.save(commit=False)  # Guarda la compra pero no hace commit todavía
-            numeros_seleccionados = form.cleaned_data['numeros']  # Obtiene los números seleccionados del formulario
-            for numero in numeros_seleccionados:
-                numero.id_compra = compra  # Asigna el id_compra de cada número a la compra
-                numero.save()  # Guarda el número
-            compra.save()  # Ahora que todos los números tienen el id_compra, guarda la compra
-            return read_rifa(request)
-    data = {'numeros': numeros, 'form': form, 'rifa': rifa}
+            nueva_compra = form.save()
+
+            numeros_seleccionados = request.POST.getlist('numeros')
+
+            if nueva_compra.codigo is not None and validar_codigo(nueva_compra.codigo):
+                Numero.objects.filter(id__in=numeros_seleccionados).update(id_compra=nueva_compra, estado='PA')
+            else:
+                Numero.objects.filter(id__in=numeros_seleccionados).update(id_compra=nueva_compra, estado='RE')
+
+            return redirect(f'/read_rifa/{rifa_id}')
+    else:
+        form = formCompra()
+
+    data = {'rifa': rifa, 'form': form, 'numeros': numeros}
     return render(request, 'comprar_numeros.html', data)
+
+def rifas_terminadas(request):
+    rifas_terminadas = Rifa.objects.filter(estado='FI')
+
+    data = {'rifas': rifas_terminadas}
+    return render(request, 'rifas_terminadas.html', data)

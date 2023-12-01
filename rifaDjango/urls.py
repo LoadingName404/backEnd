@@ -26,6 +26,7 @@ urlpatterns = [
     path('', views.index),
     path('read_rifa/<int:rifa_id>', views.read_rifa),
     path('comprar_numero/<int:rifa_id>', views.comprar_numero),
+    path('rifas_terminadas/', views.rifas_terminadas),
 ]
 if settings.DEBUG :
     urlpatterns += static(settings.MEDIA_URL,

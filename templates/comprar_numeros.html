@@ -42,7 +42,7 @@
               <a class="nav-link" href="/admin">Administracion</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Rifas finalizadas</a>
+                <a class="nav-link" href="/rifas_terminadas/">Rifas finalizadas</a>
             </li>
           </ul>
         </div>
@@ -53,30 +53,30 @@
   <main>
     <div class="container">
       <h2>Números Disponibles:</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Numero</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for n in numeros %}
-          <tr>
-            <th scope="row">{{ n.numero }}</th>
-            <td><button type="button" class="btn btn-primary">Seleccionar</button></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div class="container">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <a href="/read_rifa/{{ rifa.id }}" class="btn btn-danger">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Comprar numeros</button>
-        </form>
+      <form method="POST">
+        {% csrf_token %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Numero</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for n in numeros %}
+            <tr>
+              <th scope="row">{{ n.numero }}</th>
+              <td>
+                <input type="checkbox" name="numeros" value="{{ n.id }}">
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {{ form.as_p }}
+        <a href="/read_rifa/{{ rifa.id }}" class="btn btn-danger">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Comprar numeros</button>
+      </form>
     </div>
   </main>
 
