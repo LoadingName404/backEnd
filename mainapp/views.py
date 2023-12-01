@@ -36,6 +36,8 @@ def comprar_numero(request, rifa_id):
                 Numero.objects.filter(id__in=numeros_seleccionados).update(id_compra=nueva_compra, estado='PA')
             except ValidationError:
                 Numero.objects.filter(id__in=numeros_seleccionados).update(id_compra=nueva_compra, estado='RE')
+            except:
+                Numero.objects.filter(id__in=numeros_seleccionados).update(id_compra=nueva_compra, estado='RE')
 
             return redirect(f'/read_rifa/{rifa_id}')
     else:
