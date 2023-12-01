@@ -45,7 +45,7 @@ def comprar_numero(request, rifa_id):
     return render(request, 'comprar_numeros.html', data)
 
 def rifas_terminadas(request):
-    rifas_sin_sortear = Rifa.objects.filter(estado='DI', fecha_fin__lt=now())
+    rifas_sin_sortear = Rifa.objects.filter(estado='DI', fecha_termino__lt=now())
     for rifa in rifas_sin_sortear:
         rifa.estado = 'FI'
         rifa.save()
