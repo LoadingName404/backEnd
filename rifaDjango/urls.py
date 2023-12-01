@@ -19,15 +19,13 @@ from django.urls import path
 
 from django.conf import settings
 from django.conf.urls.static import static
-
-
 from mainapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('rifas/', views.listar_rifas),
     path('read_rifa/<int:rifa_id>', views.read_rifa),
+    path('comprar_numero/<int:rifa_id>', views.comprar_numero),
 ]
 if settings.DEBUG :
     urlpatterns += static(settings.MEDIA_URL,

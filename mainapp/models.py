@@ -18,43 +18,6 @@ class Rifa (models.Model):
     
     def __str__(self):
         return self.nombre
-    
-class Premio (models.Model):
-    nombre = models.CharField(max_length=50, null=False)
-    descripcion =models.CharField(max_length=1500, null=True, blank=True)
-    imagen = models.ImageField(upload_to='images/premio/', null=False)
-
-    def __str__(self):
-        return self.nombre
-    
-class Premio_Rifa (models.Model):
-    id_rifa = models.ForeignKey(Rifa, on_delete=models.CASCADE, null=False)
-    id_premio = models.ForeignKey(Premio, on_delete=models.CASCADE, null=False)
-
-    def __str__(self):
-        return f'Premio {self.id_premio.nombre} de rifa: {self.id_rifa.nombre}'
-
-class Numero (models.Model):
-    ESTADOS_CHOICES = [
-        ('PA', 'Pagado'),
-        ('RE', 'Reservado'),
-        ('DI', 'Disponible'),
-    ]
-    numero = models.PositiveIntegerField(null=False)
-    id_rifa = models.ForeignKey(Rifa, on_delete= models.CASCADE, null=False)
-    estado = models.CharField(max_length=2, choices=ESTADOS_CHOICES, default='DI', null=False)
-    ganador = models.BooleanField()
-
-    def __str__(self):
-        return f'Numero {str(self.numero)} de la rifa {self.id_rifa.nombre}'
-
-class Cliente (models.Model):
-    nombre = models.CharField(max_length=100, null=False)
-    email = models.CharField(max_length=100, null=False)
-    telefono = models.PositiveIntegerField(validators=[MaxValueValidator(999999999)], null=False)
-
-    def __str__(self):
-        return f'Cliente {self.nombre}'
 
 def validar_codigo(value):
     # Verificar la longitud del código
@@ -76,14 +39,38 @@ def validar_codigo(value):
 
 class Compra (models.Model):
     codigo = models.CharField(max_length=10, validators=[validar_codigo], null=True, blank=True)
-    id_cliente = models.ForeignKey(Cliente, on_delete= models.CASCADE, null=False)
+    nombre = models.CharField(max_length=100, null=False)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+    telefono = models.PositiveIntegerField(validators=[MaxValueValidator(999999999)], null=True, blank=True)
+
+    def clean(self):
+        super().clean()  # llama al método clean() de la superclase
+        if self.email is None and self.telefono is None:
+            raise ValidationError('Debe proporcionar al menos un email o un teléfono.')
 
     def __str__(self):
         return f'Compra {self.id}'
 
-class Numero_Compra (models.Model):
-    id_numero = models.ForeignKey(Numero, on_delete=models.CASCADE, null=False)
-    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, null=False)
+class Numero (models.Model):
+    ESTADOS_CHOICES = [
+        ('PA', 'Pagado'),
+        ('RE', 'Reservado'),
+        ('DI', 'Disponible'),
+    ]
+    numero = models.PositiveIntegerField(null=False)
+    estado = models.CharField(max_length=2, choices=ESTADOS_CHOICES, default='DI', null=False)
+    id_rifa = models.ForeignKey(Rifa, on_delete= models.CASCADE, null=False)
+    id_compra = models.ForeignKey(Compra, on_delete= models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f'Numero {self.id_numero.numero} de la rifa {self.id_numero.id_rifa} para el cliente {self.id_compra.id_cliente}.'
+        return f'Numero {str(self.numero)} de la rifa {self.id_rifa.nombre}'
+
+class Premio (models.Model):
+    nombre = models.CharField(max_length=50, null=False)
+    descripcion =models.CharField(max_length=1500, null=False)
+    imagen = models.ImageField(upload_to='images/premio/', null=False)
+    id_rifa = models.ForeignKey(Rifa, on_delete= models.CASCADE, null=False)
+    id_numero = models.ForeignKey(Numero, on_delete= models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
